@@ -18,7 +18,15 @@ public class MainManager : MonoBehaviour
     
     private bool m_GameOver = false;
 
-    
+    void Awake()
+    {
+        Text highScoreText = GameObject.Find("HighScore").GetComponent<Text>();
+        if (MenuData.instance.highScoreData != null)
+        {
+            highScoreText.text = "Best Score : " + MenuData.instance.highScoreData.name + " : " + MenuData.instance.highScoreData.score;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,10 +74,15 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
+        if (MenuData.instance.presentData.score < m_Points)
+        {
+            MenuData.instance.presentData.score = m_Points;
+        }
     }
 
     public void GameOver()
     {
+        MenuData.instance.SaveData(MenuData.instance.presentData);
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
